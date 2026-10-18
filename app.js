@@ -1,12 +1,12 @@
 const fruits = [
-{ name: "apple", symbol: "🍎 " },
-{ name: "banana", symbol: "🍌 " },
-{ name: "cherry", symbol: "🍒 " },
-{ name: "coconut", symbol: "🥥 " },
-{ name: "grapes", symbol: "🍇 " },
-{ name: "mango", symbol: "🥭 " },
-{ name: "pineapple", symbol: "🍍 " },
-{ name: "watermelon", symbol: "🍉 " },
+{ name: "apple", symbol: "🍎" },
+{ name: "banana", symbol: "🍌" },
+{ name: "cherry", symbol: "🍒" },
+{ name: "coconut", symbol: "🥥" },
+{ name: "grapes", symbol: "🍇" },
+{ name: "mango", symbol: "🥭" },
+{ name: "pineapple", symbol: "🍍" },
+{ name: "watermelon", symbol: "🍉" },
 ];
 
 function shuffle(array) {
@@ -17,9 +17,8 @@ const j = Math.floor(Math.random() * (i + 1));
 return array;
 }
 
-
+//Ex.1 Board Building
 let deck = [];
-
 function buildBoard() {
   const board = document.querySelector("#board");
   
@@ -45,4 +44,50 @@ function buildBoard() {
 }
 
 
+// Ex.2 Card Flipping
+
+let flippedCards = [];
+
+const board =  document.querySelector("#board");
+
+board.addEventListener("click", (event) => {
+  const card = event.target;
+
+if (!card.classList.contains("card")) {
+  return;
+}
+
+if(card.classList.contains("flipped")){
+  return;
+}
+
+const index = Number(card.dataset.index);
+const fruit = deck[index];
+
+card.textContent = fruit.symbol;
+card.classList.add("flipped");
+
+card.setAttribute("aria-label", `Card ${index + 1}, ${fruit.name}`);
+
+flippedCards.push(card);
+});
+
 buildBoard();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
