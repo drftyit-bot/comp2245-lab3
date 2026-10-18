@@ -70,8 +70,42 @@ card.classList.add("flipped");
 card.setAttribute("aria-label", `Card ${index + 1}, ${fruit.name}`);
 
 flippedCards.push(card);
-});
 
+//Ex.3 Comparison of two cards
+
+if (flippedCards.length === 2) {
+    moves++;
+    movesDisplay.textContent = moves;
+
+    const [card1, card2] = flippedCards;
+    const fruit1 = deck[Number(card1.dataset.index)];
+    const fruit2 = deck[Number(card2.dataset.index)];
+
+    if (fruit1.name === fruit2.name) {
+      // Cards match: Add 'matched' class and disable them
+      card1.classList.add("matched");
+      card2.classList.add("matched");
+      card1.disabled = true;
+      card2.disabled = true;
+
+      statusDisplay.textContent = "That's a pair!";
+
+      flippedCards = [];
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+});
 buildBoard();
 
 
