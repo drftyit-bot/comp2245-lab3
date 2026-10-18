@@ -21,6 +21,7 @@ return array;
 let deck = [];
 function buildBoard() {
   const board = document.querySelector("#board");
+  board.replaceChildren();
   
 
   deck = shuffle([...fruits, ...fruits]);
@@ -41,12 +42,13 @@ function buildBoard() {
 
 let flippedCards = [];
 let moves = 0;
+let matchedPairs = 0
 let waiting = false;
 
 const board =  document.querySelector("#board");
 const movesDisplay = document.querySelector("#moves");
 const statusDisplay = document.querySelector("#status");
-
+const newGameBtn = document.querySelector("#new-game");
 
 board.addEventListener("click", (event) => {
   const card = event.target;
@@ -84,15 +86,21 @@ if (flippedCards.length === 2) {
     const fruit2 = deck[Number(card2.dataset.index)];
 
     if (fruit1.name === fruit2.name) {
-      // Cards match: Add 'matched' class and disable them
       card1.classList.add("matched");
       card2.classList.add("matched");
       card1.disabled = true;
       card2.disabled = true;
 
-      statusDisplay.textContent = "That's a pair!";
-
+      matchedPairs++;
       flippedCards = [];
+
+	//Ex.5 Win Condition Check
+      if (matchedPairs === fruits.length) {
+        statusDisplay.textContent = `You found all the pairs in ${moves} moves!`;
+        statusDisplay.classList.add("you-won");
+      } else {
+        statusDisplay.textContent = "That's a pair!";
+      }
      } else {
       Mismatch(card1, card2);
     }
@@ -101,7 +109,7 @@ if (flippedCards.length === 2) {
 //Ex.4 Flipping back unmatched cards
 function Mismatch(card1, card2) {
   statusDisplay.textContent = "Not a pair. Try again.";
-  waiting = true; // Lock board clicks
+  waiting = true;
 
   setTimeout(() => {
     // Reset card 1
@@ -121,8 +129,6 @@ function Mismatch(card1, card2) {
     waiting = false;
   }, 1000);
 }
-
-
 
 
 
