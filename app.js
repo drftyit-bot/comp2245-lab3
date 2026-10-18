@@ -42,13 +42,41 @@ function buildBoard() {
 
 let flippedCards = [];
 let moves = 0;
-let matchedPairs = 0
+let matchedPairs = 0;
 let waiting = false;
+let timerID = null; //Ex.6 Game Timer
 
 const board =  document.querySelector("#board");
 const movesDisplay = document.querySelector("#moves");
 const statusDisplay = document.querySelector("#status");
 const newGameBtn = document.querySelector("#new-game");
+
+
+
+//Ex.4 Flipping back unmatched cards
+function Mismatch(card1, card2) {
+  statusDisplay.textContent = "Not a pair. Try again.";
+  waiting = true;
+
+  timerID = setTimeout(() => {
+    // Reset card 1
+    const idx1 = Number(card1.dataset.index);
+    card1.textContent = "";
+    card1.classList.remove("flipped");
+    card1.setAttribute("aria-label", `Card ${idx1 + 1}, face down`);
+
+    // Reset card 2
+    const idx2 = Number(card2.dataset.index);
+    card2.textContent = "";
+    card2.classList.remove("flipped");
+    card2.setAttribute("aria-label", `Card ${idx2 + 1}, face down`);
+
+    // Reset state and unlock board
+    flippedCards = [];
+    waiting = false;
+    timerID = null;
+  }, 1000);
+}
 
 board.addEventListener("click", (event) => {
   const card = event.target;
@@ -56,10 +84,6 @@ board.addEventListener("click", (event) => {
 if (waiting || !card.classList.contains("card")) {
     return;
   }
-
-if (!card.classList.contains("card")) {
-  return;
-}
 
 if(card.classList.contains("flipped")){
   return;
@@ -106,37 +130,33 @@ if (flippedCards.length === 2) {
     }
   }
 
-//Ex.4 Flipping back unmatched cards
-function Mismatch(card1, card2) {
-  statusDisplay.textContent = "Not a pair. Try again.";
-  waiting = true;
-
-  setTimeout(() => {
-    // Reset card 1
-    const idx1 = Number(card1.dataset.index);
-    card1.textContent = "";
-    card1.classList.remove("flipped");
-    card1.setAttribute("aria-label", `Card ${idx1 + 1}, face down`);
-
-    // Reset card 2
-    const idx2 = Number(card2.dataset.index);
-    card2.textContent = "";
-    card2.classList.remove("flipped");
-    card2.setAttribute("aria-label", `Card ${idx2 + 1}, face down`);
-
-    // Reset state and unlock board
-    flippedCards = [];
-    waiting = false;
-  }, 1000);
-}
-
-
-
-
-
-
 
 });
+
+// Ex.6cont New Game Logic
+function startNewGame() {
+  if (timerID !== null) {
+    clearTimeout(timerID);
+    timerID = null;
+  }
+
+  moves = 0;
+  matchedPairs = 0;
+  flippedCards = [];
+  waiting = false;
+
+  movesDisplay.textContent = "0";
+  statusDisplay.textContent = "Turn over two cards to find a matching pair.";
+  statusDisplay.classList.remove("you-won");
+
+  buildBoard();
+}
+
+if (newGameBtn) {
+  newGameBtn.addEventListener("click", startNewGame);
+}
+
+// Initial board render
 buildBoard();
 
 
